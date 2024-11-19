@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://p1o5voigdtb4"]
+
+[ext_resource type="Script" path="res://Scripts/WindowController.gd" id="1_c0pkl"]
+[ext_resource type="PackedScene" uid="uid://dxvnnnq1x8e6" path="res://Scenes/pet.tscn" id="2_86qja"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_c0pkl")
+
+[node name="Pet" parent="." instance=ExtResource("2_86qja")]
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
