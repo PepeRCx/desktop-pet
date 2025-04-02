@@ -42,16 +42,15 @@ func _on_gui_input(event: InputEvent) -> void:
 func apply_gravity(delta):
 	velocity.y += gravity * delta
 	var current_position = DisplayServer.window_get_position()
-	var new_position = current_position + Vector2i(velocity * delta)
-	var screen_size = DisplayServer.screen_get_size()
-	var window_size = DisplayServer.window_get_size()
+	var new_position = Vector2i(current_position) + Vector2i(velocity * delta)
 	
-	var workspace_height = DisplayServer.screen_get_usable_rect(0).size.y #Excluye la barra de tareas
-	var max_y = workspace_height - window_size.y
+	var screen_rect = DisplayServer.screen_get_usable_rect(0)
+	var max_y = screen_rect.position.y + screen_rect.size.y - DisplayServer.window_get_size().y
 	
 	if new_position.y > max_y:
 		new_position.y = max_y
 		velocity.y = -velocity.y * bounce_factor
+	
 	DisplayServer.window_set_position(new_position)
 
 func update_animation():
