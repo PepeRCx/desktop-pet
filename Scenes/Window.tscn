@@ -13,5 +13,3 @@ grow_vertical = 2
 script = ExtResource("1_c0pkl")
 
 [node name="Pet" parent="." instance=ExtResource("2_86qja")]
-
-[connection signal="gui_input" from="." to="." method="_on_gui_input"]

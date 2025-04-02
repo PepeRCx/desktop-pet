@@ -23,22 +23,6 @@ func _process(delta: float) -> void:
 		apply_gravity(delta)
 		apply_horizontal_movement(delta)
 
-func _on_gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			if event.pressed:
-				dragging = true
-				drag_start_position = get_global_mouse_position()
-			else:
-				dragging = false
-	
-	elif event is InputEventMouseMotion and dragging:
-		var displacement = get_global_mouse_position() - drag_start_position
-		var current_position = DisplayServer.window_get_position()
-		var new_position = current_position + Vector2i(displacement)
-		DisplayServer.window_set_position(new_position)
-		drag_start_position = get_global_mouse_position()
-
 func apply_gravity(delta):
 	velocity.y += gravity * delta
 	var current_position = DisplayServer.window_get_position()
@@ -82,12 +66,22 @@ func apply_horizontal_movement(delta):
 		choose_new_direction()
 	
 	var current_position = DisplayServer.window_get_position()
-	var new_position = current_position + Vector2i(move_direction * horizontal_speed * delta, 0)
-	var screen_size = DisplayServer.screen_get_size()
+	var movement = move_direction * horizontal_speed * delta
+	var new_x = int(current_position.x + round(movement))
+	
+	var screen_index = DisplayServer.window_get_current_screen()
+	var screen_rect = DisplayServer.screen_get_usable_rect(screen_index)
 	var window_size = DisplayServer.window_get_size()
 	
-	new_position.x = clamp(new_position.x, 0, screen_size.x - window_size.x)
-	DisplayServer.window_set_position(new_position)
+	var min_x = screen_rect.position.x
+	var max_x = screen_rect.position.x + screen_rect.size.x - window_size.x
+	
+	new_x = clamp(new_x, min_x, max_x)
+	
+	DisplayServer.window_set_position(Vector2i(new_x, current_position.y))
+	
+	if new_x <= min_x or new_x >= max_x:
+		choose_new_direction()
 
 func choose_new_direction():
 	move_timer = 0
