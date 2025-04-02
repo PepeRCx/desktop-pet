@@ -23,22 +23,6 @@ func _process(delta: float) -> void:
 		apply_gravity(delta)
 		apply_horizontal_movement(delta)
 
-func _on_gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			if event.pressed:
-				dragging = true
-				drag_start_position = get_global_mouse_position()
-			else:
-				dragging = false
-	
-	elif event is InputEventMouseMotion and dragging:
-		var displacement = get_global_mouse_position() - drag_start_position
-		var current_position = DisplayServer.window_get_position()
-		var new_position = current_position + Vector2i(displacement)
-		DisplayServer.window_set_position(new_position)
-		drag_start_position = get_global_mouse_position()
-
 func apply_gravity(delta):
 	velocity.y += gravity * delta
 	var current_position = DisplayServer.window_get_position()
